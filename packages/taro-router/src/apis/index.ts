@@ -184,6 +184,7 @@ const createReLaunch = ({ customRoutes }: RouterConfig, history?: History) => {
         // setTimeout hack
         // 修复 history.go 之后，后面的代码不执行的问题
         setTimeout(() => {
+          console.log('setTimeout', url, history)
           if (history) {
             if (/^(https?:)\/\//.test(url)) {
               window.location.assign(url)
@@ -200,7 +201,10 @@ const createReLaunch = ({ customRoutes }: RouterConfig, history?: History) => {
           res.errMsg = 'reLaunch:ok'
           resolve(res)
         }, 50)
-        if (history) {
+        const key = window.history.state.key * 1
+        if (key > 0) {
+          window.history.go(-key)
+        } else if (history) {
           history.go(-(history.length - 1))
         } else {
           window.history.go(-(window.history.length - 1))
